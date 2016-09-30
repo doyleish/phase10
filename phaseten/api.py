@@ -19,14 +19,17 @@ def top_discard(game_id):
 def top_deck(game_id):
     return card
 
+def verify_hand(game_id, player, hand):
+    return True
+
 def pull_from_discard(game_id, player):
-    return newhand
+    return newcard
 
 def pull_from_deck(game_id, player):
-    return newhand
+    return newcard
 
 def discard(game_id, player, card):
-    return newhand
+    return topdiscard
 
 def lay_down(game_id, player):
     if good:
@@ -35,7 +38,6 @@ def lay_down(game_id, player):
 def wait_for_turn(game_id):
     time.sleep(2)
     return game_id.current_turn
-    return
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=101010)
