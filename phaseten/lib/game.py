@@ -4,7 +4,7 @@ class game(object):
     joinable = True
     dealer = 0
     turn = 1
-
+    
     players = []
     
     deck = None
