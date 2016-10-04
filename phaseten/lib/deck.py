@@ -41,11 +41,11 @@ class Deck(object):
             self.shuffle(preserve_top=True)
         return
 
-    def pull_main(self):
+    def draw_main(self):
         self._state_check()
         return self.main_pile.pop(-1)
         
-    def pull_discard(self):
+    def draw_discard(self):
         if len(self.discard_pile) == 0:
             # The client should be checking that there is a discard pile
             return False

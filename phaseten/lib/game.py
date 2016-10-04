@@ -1,6 +1,7 @@
 
 
 class game(object):
+    game_id = 0
     joinable = True
     dealer = 0
     turn = 1
@@ -23,13 +24,13 @@ class game(object):
         num_players = len(self.players)
         for x in range(num_players*10)
             index = x % num_players
-            self.players[index].hand.append(self.deck.draw_main())
+            self.players[index].add_card(self.deck.draw_main())
 
     def draw_main(self, player):
-        self.players[index].hand.append(self.deck.draw_main())
+        self.players[index].add_card(self.deck.draw_main())
         return
 
     def draw_discard(self, player):
-        self.players[index].hand.append(self.deck.draw_discard())
+        self.players[index].add_card(self.deck.draw_discard())
         return
 
