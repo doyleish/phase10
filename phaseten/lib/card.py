@@ -13,8 +13,8 @@ class Card(Base):
     0=black, 1=red, 2=blue, 3=yellow, 4=green
     
     location (2 players)
-    -2 = main pile
-    -1 = discard
+    -2 = discard
+    -1 = main pile
     0 = player 0 hand (player)
     1 = player 1 hand (player)
     2 = player 0 phase pile0 (pile+1)*numplayers + player

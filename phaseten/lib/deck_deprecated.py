@@ -4,8 +4,6 @@ import random
 
 random.seed()
 class Deck(object):
-    main_pile = []
-    discard_pile = []
 
     def __init__(self):
         
@@ -22,6 +20,10 @@ class Deck(object):
 
         self.shuffle()
     
+    def get_main(self):
+
+    def get_discard(self):
+
     def top_main(self):
         if len(self.main_pile) == 0:
             return False
