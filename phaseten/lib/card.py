@@ -35,6 +35,9 @@ class Card(Base):
     sprite = Column(String(30))
     
     DEFAULTS = {
+        'game_id': -1,
+        'location': -1,
+        'pos': -1,
         'wild': False,
         'skip': False,
         'game_id': 0,
