@@ -1,14 +1,14 @@
-from card import Card
+from lib.card import Card
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Boolean, Integer
 
 Base = declarative_base()
 
 class Player(Base):
-    __table__ = 'player'
+    __tablename__ = 'player'
     
     game_id = Column(Integer, primary_key=True)
-    player_id = Column(Integer, primary_key=True, auto_increment=True)
+    player_id = Column(Integer, primary_key=True)
     current_phase = Column(Integer)
     score = Column(Integer)
     
@@ -19,7 +19,7 @@ class Player(Base):
     }
 
     def __init__(self, **kwargs):
-        self.__dict__.update(DEFAULTS)
+        self.__dict__.update(self.DEFAULTS)
         self.__dict__.update(kwargs)
 
     def __str__(self):

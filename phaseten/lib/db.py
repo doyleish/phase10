@@ -1,6 +1,8 @@
-from card import Card
-from player import Player
-from game import Game
+from lib.card import Card
+from lib.player import Player
+from lib.game import Game
+
+import random
 
 def get_game(session, game_id):
     return session.query(Game).filter(Game.game_id == game_id).one()
@@ -17,6 +19,13 @@ def get_players(session, game_id):
 
 def get_cards(session, game_id, location):
     res = session.query(Card).filter((Card.location == location)&(Game.game_id == game_id)).order_by(Card.pos.asc()).all()
+    retval = []
+    for x in res:
+        retval.append(x)
+    return retval
+
+def get_all_cards(session, game_id):
+    res = session.query(Card).filter((Game.game_id == game_id)).order_by(Card.pos.asc()).all()
     retval = []
     for x in res:
         retval.append(x)
@@ -39,33 +48,40 @@ def _state_check(main_pile, discard_pile):
     return
 
 def _card_bootstrap(session, game_id):
+        # mfw SQLite doesn't support autoinc on composite primary keys :(
         count = 0
         for color in (1,1,2,2,3,3,4,4):
             for number in (1,2,3,4,5,6,7,8,9,10,11,12):
-                session.add(Card(game_id=game_id, number=number, pos=count))
+                session.add(Card(game_id=game_id, number=number, color=color, pos=count, card_id=count))
                 count += 1
 
         for x in range(4):
-            session.add(Card(game_id=game_id, skip=True, pos=count))
+            session.add(Card(game_id=game_id, skip=True, pos=count, card_id=count))
             count += 1
 
         for x in range(8):
-            session.add(Card(game_id=game_id, wild=True, pos=count)
+            session.add(Card(game_id=game_id, wild=True, pos=count, card_id=count))
             count += 1
-
 
 def create_game(session):
     game = Game()
     session.add(game)
     session.flush()
     game_id = game.game_id
-    new_player(session, game_id)
     _card_bootstrap(session, game_id)
     session.commit()
+    return game_id
 
 def new_player(session, game_id):
-    session.add(Player(game_id=game_id))
-    return
+    game = get_game(session, game_id)
+    num = len(session.get_players(session, game_id))
+    new_player = Player(game_id=game_id, player_id = num)
+    session.add(new_player)
+    session.flush()
+    pid = new_player.player_id
+    game.ac += 1
+    session.commit()
+    return pid
 
 def top_main(session, game_id):
     return get_cards(session, game_id, -1)[-1]
@@ -96,24 +112,44 @@ def draw_discard(session, game_id, player_id):
     session.commit()
     return
 
+#TODO
+def discard(session, game_id, card_id):
+    game = get_game(session, game_id)
+    card = get_card(session, game_id, card_id)
+    discard_pile = get_cards(session, game_id, -2)
+    card.location = -2
+    card.pos = len(discard_pile)
+    game.ac += 1
+    session.commit()
+    return
+
 def deal_round(session, game_id):
+    # set up deck
+    cards = get_all_cards(session, game_id)
+    for card in cards:
+        card.location = -1
+    shuffle(cards)
+
+    # deal out cards
     game = get_game(session, game_id)
     players = get_players(session, game_id)
     dealer = game.game_round%len(players)
     for player in range(dealer+1, (len(players)*10)+dealer+1):
         turn = player%len(players)
         draw_main(session, game_id, turn)
-
+    
+    # update game obj to reflect next round
     game.game_round += 1
+    game.ac+=1
     game.player_turn = (dealer+1)%len(players)
+
     session.commit()
-    return
+    return "GOOD"
 
 def rearrange_hand(session, game_id, player_id, indices):
     hand = get_cards(session, game_id, player_id)
     for index in range(indices):
         hand[indices[index]].pos = index
-
     session.commit()
 
 def shuffle(pile, preserve_top=False):
@@ -126,4 +162,6 @@ def shuffle(pile, preserve_top=False):
         b = random.randint(0, end)
         pile[a], pile[b] = pile[b], pile[a]
     
+    for x in range(len(pile)):
+        pile[x].pos = x
     return

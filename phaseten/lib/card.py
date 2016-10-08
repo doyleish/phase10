@@ -1,12 +1,14 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Boolean, Integer, String
 
+import json
+
 Base = declarative_base()
 
 color_map = ['Black', 'Red', 'Blue', 'Yellow', 'Green']
 
 class Card(Base):
-    __table__ = "card"
+    __tablename__ = "card"
 
     """ 
     colors
@@ -24,6 +26,7 @@ class Card(Base):
     """
 
     game_id = Column(Integer, primary_key=True) # game id that the card belongs to
+    card_id = Column(Integer, primary_key=True)
     location = Column(Integer) # location of the card
     pos = Column(Integer) # position of the card in its location
     
@@ -40,8 +43,6 @@ class Card(Base):
         'pos': -1,
         'wild': False,
         'skip': False,
-        'game_id': 0,
-        'card_id': 0,
         'number': 0,
         'color': 0,
         'value': 0,
@@ -49,7 +50,7 @@ class Card(Base):
     }
 
     def __init__(self, **kwargs):
-        self.__dict__.update(DEFAULTS)
+        self.__dict__.update(self.DEFAULTS)
         self.__dict__.update(kwargs)
         
         prefix = ""
@@ -79,3 +80,9 @@ class Card(Base):
     def __repr__(self):
         return self.__str__()
         
+    def jsonify(self):
+        return json.dumps({
+            'sprite': self.sprite,
+            'card_id': self.card_id
+        })
+
