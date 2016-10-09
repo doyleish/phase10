@@ -74,7 +74,7 @@ def create_game(session):
 
 def new_player(session, game_id):
     game = get_game(session, game_id)
-    num = len(session.get_players(session, game_id))
+    num = len(get_players(session, game_id))
     new_player = Player(game_id=game_id, player_id = num)
     session.add(new_player)
     session.flush()
@@ -89,7 +89,10 @@ def top_main(session, game_id):
 def top_discard(session, game_id):
     return get_cards(session, game_id, -2)[-1]
 
-def draw_main(session, game_id, player_id):
+def draw_main(session, game_id):
+    game = get_game(session, game_id)
+    player_id = game.player_turn
+    
     pile = get_cards(session, game_id, -1)
     discard = get_cards(session, game_id, -2)
     hand = get_cards(session, game_id, player_id)
@@ -102,17 +105,22 @@ def draw_main(session, game_id, player_id):
     session.commit()
     return
     
-def draw_discard(session, game_id, player_id):
+def draw_discard(session, game_id):
+    game = get_game(session, game_id)
+    player_id = game.player_turn
+    
     discard = get_cards(session, game_id, -2)
     hand = get_cards(session, game_id, player_id)
 
-    pile[-1].location = player_id
-    pile[-1].pos = len(hand) # append card to end of hand
+    if !len(discard) or discard[-1].wild or discard[-1].skip:
+        return "BAD"
+
+    discard[-1].location = player_id
+    discard[-1].pos = len(hand) # append card to end of hand
     
     session.commit()
-    return
+    return "GOOD"
 
-#TODO
 def discard(session, game_id, card_id):
     game = get_game(session, game_id)
     card = get_card(session, game_id, card_id)
@@ -120,8 +128,9 @@ def discard(session, game_id, card_id):
     card.location = -2
     card.pos = len(discard_pile)
     game.ac += 1
+
     session.commit()
-    return
+    return "GOOD"
 
 def deal_round(session, game_id):
     # set up deck
@@ -150,7 +159,9 @@ def rearrange_hand(session, game_id, player_id, indices):
     hand = get_cards(session, game_id, player_id)
     for index in range(indices):
         hand[indices[index]].pos = index
+    
     session.commit()
+    return "GOOD"
 
 def shuffle(pile, preserve_top=False):
     end = len(pile)-1

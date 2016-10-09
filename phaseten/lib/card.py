@@ -5,14 +5,14 @@ import json
 
 Base = declarative_base()
 
-color_map = ['Black', 'Red', 'Blue', 'Yellow', 'Green']
+COLOR_MAP = ['black', 'red', 'blue', 'gold', 'green']
 
 class Card(Base):
     __tablename__ = "card"
 
     """ 
     colors
-    0=black, 1=red, 2=blue, 3=yellow, 4=green
+    0=black, 1=red, 2=blue, 3=gold, 4=green
     
     location (2 players)
     -2 = discard
@@ -55,10 +55,10 @@ class Card(Base):
         
         prefix = ""
         if self.wild:
-            prefix = "w"
+            prefix = "W"
             self.value = 25
         elif self.skip:
-            prefix = "s"
+            prefix = "S"
             self.value = 15
         else:
             prefix = self.number
@@ -67,7 +67,7 @@ class Card(Base):
             else:
                 self.value = 5
         
-        self.sprite = "/sprite/card/{}-{}.png".format(prefix, self.color)
+        self.sprite = "/p10/api/sprite/card/{}-{}".format(prefix, self.color)
 
     def __str__(self):
         if self.wild:
@@ -75,7 +75,7 @@ class Card(Base):
         elif self.skip:
             return "Skip"
         else:
-            return "{} {}".format(color_map[self.color], self.number)
+            return "{} {}".format(COLOR_MAP[self.color], self.number)
 
     def __repr__(self):
         return self.__str__()

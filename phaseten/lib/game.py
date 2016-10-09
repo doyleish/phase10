@@ -11,17 +11,15 @@ class Game(Base):
     dealer = Column(Integer)
     game_round = Column(Integer)
     player_turn = Column(Integer)
+    ac = Column(Integer)
     
     DEFAULTS = {
         'dealer': 0,
         'game_round': 0,
-        'player_turn': 0
+        'player_turn': 0,
+        'ac': 0
     }
 
     def __init__(self):
         self.__dict__.update(self.DEFAULTS)
 
-        #TODO
-        # bootstrap cards
-        # shuffle cards
-        # 
