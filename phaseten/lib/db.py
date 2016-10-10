@@ -112,7 +112,7 @@ def draw_discard(session, game_id):
     discard = get_cards(session, game_id, -2)
     hand = get_cards(session, game_id, player_id)
 
-    if !len(discard) or discard[-1].wild or discard[-1].skip:
+    if (not len(discard)) or discard[-1].wild or discard[-1].skip:
         return "BAD"
 
     discard[-1].location = player_id

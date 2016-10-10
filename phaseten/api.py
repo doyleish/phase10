@@ -74,6 +74,11 @@ def get_ac(game_id):
     # return action_counter
     return jsonify(db.get_game(s(), game_id).ac)
 
+@app.route('/p10/api/game_info/<game_id>')
+def game_info(game_id):
+    # return action_counter
+    return db.get_game(s(), game_id).jsonify()
+
 @app.route('/p10/api/sprite/card/<value>-<color>')
 def card_sprite(value, color):
     # return action_counter

@@ -2,6 +2,8 @@ from lib.card import Card
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Boolean, Integer
 
+import json
+
 Base = declarative_base()
 
 class Game(Base):
@@ -28,4 +30,7 @@ class Game(Base):
                 'dealer': self.dealer,
                 'round': self.game_round,
                 'turn': self.player_turn}
+    
+    def jsonify(self):
+        return json.dumps(self.dictify())
 
