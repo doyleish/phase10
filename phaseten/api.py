@@ -20,7 +20,10 @@ Game.metadata.create_all(engine)
 s = sessionmaker(bind=engine)
 
 def jsonify(val):
-    return json.dumps({"return":val})
+    if isinstance(val,dict):
+        return json.dumps(val)
+    else:
+        return json.dumps({"return":val})
 
 @app.route('/p10/api/new_game')
 def new_game():
@@ -45,7 +48,7 @@ def top_discard(game_id):
 @app.route('/p10/api/top_main/<game_id>')
 def top_main(game_id):
     # returns the card json
-    return db.top_main(s(), game_id).jsonify()
+    return jsonify({'card_id':-1, 'sprite':'/static/back.png'})
 
 @app.route('/p10/api/draw_discard/<game_id>')
 def draw_discard(game_id):

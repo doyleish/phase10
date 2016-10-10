@@ -79,10 +79,12 @@ class Card(Base):
 
     def __repr__(self):
         return self.__str__()
-        
+    
+    def dictify(self):
+        return {'sprite': self.sprite,
+                'card_id': self.card_id}
+
     def jsonify(self):
-        return json.dumps({
-            'sprite': self.sprite,
-            'card_id': self.card_id
-        })
+        return json.dumps({'sprite': self.sprite,
+                           'card_id': self.card_id})
 

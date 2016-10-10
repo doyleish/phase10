@@ -23,3 +23,9 @@ class Game(Base):
     def __init__(self):
         self.__dict__.update(self.DEFAULTS)
 
+    def dictify(self):
+        return {'title': self.game_id,
+                'dealer': self.dealer,
+                'round': self.game_round,
+                'turn': self.player_turn}
+
