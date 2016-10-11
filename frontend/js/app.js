@@ -28,6 +28,11 @@ function listener_loop() {
         if(data["return"] > window.ac){
             console.log("full update here");
             window.ac = data["return"];
+            full_update();
         }
     })
+}
+
+function full_update(){
+    console.log("full update");
 }

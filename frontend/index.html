@@ -1,6 +1,9 @@
 <html>
-  <script src="js/jquery.js"></script>
-  <script src="js/app.js"></script>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style/app.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/app.js"></script>
+  </head>
   <div id="landing">
     <input type="text" id="game_id" placeholder="Game ID"></input>
     <button onclick="join_game();">Submit</button>
@@ -9,25 +12,36 @@
 
   </div>
   <div style="display: none;" id="game">
-    <h1 style="text-align: center;" id="game_title"></h1>
-
-    <div id="player0">
-        Player 0 <br>
-        Score: 0 <br>
-        Phase: 0
+    <h1 class="horizontal game_title" id="game_title"></h1>
+    <div class="vertical playersbar" id="playersbar">
+      <div id="player0">
+          Player 0 <br>
+          Score: 0 <br>
+          Phase: 0
+      </div>
+      <br>
+      <div id="player1">
+          Player 1 <br>
+          Score: 0 <br>
+          Phase: 0
+      </div>
+      <br>
+      <div id="player2">
+          Player 2 <br>
+          Score: 0 <br>
+          Phase: 0
+      </div>
     </div>
-    <br>
-    <div id="player1">
-        Player 1 <br>
-        Score: 0 <br>
-        Phase: 0
+    <div class="vertical mainblock" id="mainblock">
+        <div id="">
+            hi
+        </div>
     </div>
-    <br>
-    <div id="player2">
-        Player 2 <br>
-        Score: 0 <br>
-        Phase: 0
+    <div class="vertical phaseblock" id="phaseblock">
+        hi
     </div>
-    <br>
+    <div class="horizontal handblock" id="handblock">
+        hi
+    </div>
   </div>
 </html>

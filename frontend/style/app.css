@@ -1,0 +1,72 @@
+* {
+    box-sizing: border-box;
+    margin 0 auto;
+    padding 0;
+}
+
+.vertical {
+    height: calc(95% - 290px);
+}
+
+.horizontal {
+    width: 100%;
+    text-align: center;
+}
+
+.game_title {
+    height: 40px;
+    float: top;
+    border: solid;
+    border-width: 0 0 1px 0;
+    border-color: black;
+    padding-bottom: 10px;
+}
+
+.playersbar {
+    float: left;
+    min-width: 200px;
+}
+
+.mainblock {
+    float: left;
+    min-width: calc(95% - 500px);
+    padding: 10px;
+    
+    border: solid;
+    border-width: 0 1px 0 1px;
+    border-color: black;
+    
+}
+
+.phaseblock {
+    text-align: right;
+    min-width: 300px;
+    float: right;
+    
+}
+
+.handblock {
+    min-height: 250px;
+    position: absolute;
+    bottom: 0;
+    
+    padding-top: 10px;
+    
+    border: solid;
+    border-width: 1px 0 0 0;
+    border-color: black;
+}
+
+.card {
+    position: absolute;
+    display: inline-block;
+    width: 120px;
+    height: 200px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 3px;
+    padding: 5px;
+    background-color: white;
+}
+
