@@ -19,6 +19,7 @@ function join_game(game_id){
         $('#game_title').text(data['title']);
         $('#ac').val(0);
     })
+    window.hand = [];
     setInterval(listener_loop, 3000);
 }
 
@@ -26,7 +27,6 @@ function listener_loop() {
     console.log(window.ac);
     $.getJSON("/p10/api/ac/"+window.game_id, function(data){
         if(data["return"] > window.ac){
-            console.log("full update here");
             window.ac = data["return"];
             full_update();
         }
@@ -34,5 +34,23 @@ function listener_loop() {
 }
 
 function full_update(){
+    update_hand();
     console.log("full update");
 }
+
+function update_hand(){
+    $.getJSON("/p10/api/hand/" + window.game_id + "/0", function(data){
+        for(var card in data["return"]){
+            $.get(card["sprite"], function(carddata){
+                $("#handblock").innerHTML += carddata;
+            })
+        }
+    })
+    console.log($("#handblock"));
+}
+
+
+
+
+
+

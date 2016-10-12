@@ -89,9 +89,10 @@ def top_main(session, game_id):
 def top_discard(session, game_id):
     return get_cards(session, game_id, -2)[-1]
 
-def draw_main(session, game_id):
+def draw_main(session, game_id, player_id=-1):
     game = get_game(session, game_id)
-    player_id = game.player_turn
+    if player_id<0:
+      player_id = game.player_turn
     
     pile = get_cards(session, game_id, -1)
     discard = get_cards(session, game_id, -2)
@@ -132,6 +133,15 @@ def discard(session, game_id, card_id):
     session.commit()
     return "GOOD"
 
+def hand(session, game_id, player_id):
+    cards = get_cards(session, game_id, player_id)
+    rv = {'return': []}
+    for card in cards:
+        rv['return'].append(card.dictify())
+
+    return rv
+
+
 def deal_round(session, game_id):
     # set up deck
     cards = get_all_cards(session, game_id)
@@ -145,7 +155,7 @@ def deal_round(session, game_id):
     dealer = game.game_round%len(players)
     for player in range(dealer+1, (len(players)*10)+dealer+1):
         turn = player%len(players)
-        draw_main(session, game_id, turn)
+        draw_main(session, game_id, player_id=turn)
     
     # update game obj to reflect next round
     game.game_round += 1
