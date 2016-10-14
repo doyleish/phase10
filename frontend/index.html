@@ -1,6 +1,22 @@
 <html>
   <head>
+    <!-- templates -->
+    <script id="card_template" type="text/x-handlebars-template">
+        <div class="card" style="left: {{pos}};">
+            <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b>
+        </div>
+    </script>
+    <script id="person_template" type="text/x-handlebars-template">
+        <div class="card" style="left: {{pos}};">
+            <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b>
+        </div>
+    </script>
+    
+    <!-- style -->
     <link rel="stylesheet" type="text/css" href="style/app.css">
+
+    <!-- js -->
+    <script src="js/handlebars.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/app.js"></script>
   </head>

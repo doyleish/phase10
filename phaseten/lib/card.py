@@ -68,7 +68,7 @@ class Card(Base):
                 self.value = 5
         
         self.sprite = "/p10/api/sprite/card/{}-{}".format(prefix, self.color)
-
+    
     def __str__(self):
         if self.wild:
             return "Wild"
@@ -81,10 +81,18 @@ class Card(Base):
         return self.__str__()
     
     def dictify(self):
-        return {'sprite': self.sprite,
-                'card_id': self.card_id}
+        val = ""
+        if self.wild:
+            val = "W"
+        elif self.skip:
+            val = "S"
+        else:
+            val = str(self.number)
+        
+        return {'card_id': self.card_id,
+                'value': val,
+                'color': COLOR_MAP[self.color]}
 
     def jsonify(self):
-        return json.dumps({'sprite': self.sprite,
-                           'card_id': self.card_id})
+        return json.dumps(self.dictify())
 

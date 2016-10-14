@@ -3,7 +3,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 import lib.db as db
-import lib.templating as templating
 
 from lib.card import Card
 from lib.player import Player
@@ -82,11 +81,6 @@ def game_info(game_id):
 @app.route('/p10/api/hand/<game_id>/<player_id>')
 def hand(game_id, player_id):
     return jsonify(db.hand(s(), game_id, player_id))
-
-@app.route('/p10/api/sprite/card/<value>-<color>')
-def card_sprite(value, color):
-    # return action_counter
-    return templating.format_card(value, color)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10101)

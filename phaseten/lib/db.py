@@ -136,8 +136,12 @@ def discard(session, game_id, card_id):
 def hand(session, game_id, player_id):
     cards = get_cards(session, game_id, player_id)
     rv = {'return': []}
+    i = 0
     for card in cards:
-        rv['return'].append(card.dictify())
+        tmp = card.dictify()
+        tmp['pos'] = i
+        i+=50
+        rv['return'].append(tmp)
 
     return rv
 
