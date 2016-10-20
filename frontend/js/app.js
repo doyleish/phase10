@@ -38,8 +38,25 @@ function listener_loop() {
 }
 
 function full_update(){
+    //update_game_info();
+    update_players();
     update_hand();
     console.log("full update");
+}
+
+function update_players(){
+    $.getJSON("/p10/api/players/" + window.game_id, function(data){
+        console.log("player update");
+        $("#playerbar").html("");
+        $("#playerbar").text("");
+        window.players = 0;
+        for(var pl in data["return"]){
+            window.players += 1;
+            var ct = Handlebars.compile($("#player_template").html());
+            $("#playerbar").html($("#playerbar").html()+ct(data["return"][pl]));
+        }
+        $("#player"+window.player_id).css("font-weight","bold");
+    });
 }
 
 function update_hand(){

@@ -11,12 +11,12 @@ class Player(Base):
     
     game_id = Column(Integer, primary_key=True)
     player_id = Column(Integer, primary_key=True)
-    current_phase = Column(Integer)
+    phase = Column(Integer)
     score = Column(Integer)
     
     DEFAULTS = {
         'game_id': -1,
-        'current_phase': 1,
+        'phase': 1,
         'score': 0
     }
 
@@ -27,7 +27,7 @@ class Player(Base):
     def __str__(self):
         return "Game:{} Player:{} Score:{} Phase{}".format(self.game_id,
                                                            self.player_id,
-                                                           self.current_phase,
+                                                           self.phase,
                                                            self.score)
 
     def __repr__(self):
@@ -39,6 +39,4 @@ class Player(Base):
                 'score': self.score}
 
     def jsonify(self):
-        return json.dumps({'id': self.player_id,
-                           'phase': self.phase,
-                           'score': self.score})
+        return json.dumps(self.dictify())

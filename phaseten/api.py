@@ -82,5 +82,9 @@ def game_info(game_id):
 def hand(game_id, player_id):
     return jsonify(db.hand(s(), game_id, player_id))
 
+@app.route('/p10/api/players/<game_id>')
+def players(game_id):
+    return jsonify(db.get_dict_players(s(), game_id))
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10101)

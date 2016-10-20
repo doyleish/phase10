@@ -8,10 +8,10 @@ def get_game(session, game_id):
     return session.query(Game).filter(Game.game_id == game_id).one()
 
 def get_player(session, game_id, player_id):
-    return session.query(Player).filter((Player.player_id == player_id)&(Game.game_id == game_id)).one()
+    return session.query(Player).filter((Player.player_id == player_id)&(Player.game_id == game_id)).one()
 
 def get_players(session, game_id):
-    res = session.query(Player).filter(Game.game_id == game_id).order_by(Player.player_id.asc()).all()
+    res = session.query(Player).filter(Player.game_id == game_id).order_by(Player.player_id.asc()).all()
     retval = []
     for x in res:
         retval.append(x)
@@ -30,6 +30,12 @@ def get_all_cards(session, game_id):
     for x in res:
         retval.append(x)
     return retval
+
+def get_dict_players(session, game_id):
+    ret = []
+    for x in get_players(session, game_id):
+        ret.append(x.dictify())
+    return ret
 
 def _state_check(main_pile, discard_pile):
     if len(main_pile) == 1:
@@ -75,7 +81,8 @@ def create_game(session):
 def new_player(session, game_id):
     game = get_game(session, game_id)
     num = len(get_players(session, game_id))
-    new_player = Player(game_id=game_id, player_id = num)
+    new_player = Player(game_id=game_id, player_id=num)
+    print(new_player.__dict__)
     session.add(new_player)
     session.flush()
     pid = new_player.player_id

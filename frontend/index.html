@@ -6,10 +6,12 @@
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b>
         </div>
     </script>
-    <script id="person_template" type="text/x-handlebars-template">
-        <div class="card" style="left: {{pos}};">
-            <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b>
-        </div>
+    <script id="player_template" type="text/x-handlebars-template">
+        <div id="player{{id}}">
+          Player {{id}} <br>
+          Score: {{score}} <br>
+          Phase: {{phase}}
+        </div> <br>
     </script>
     
     <!-- style -->
@@ -29,24 +31,8 @@
   </div>
   <div style="display: none;" id="game">
     <h1 class="horizontal game_title" id="game_title"></h1>
-    <div class="vertical playersbar" id="playersbar">
-      <div id="player0">
-          Player 0 <br>
-          Score: 0 <br>
-          Phase: 0
-      </div>
-      <br>
-      <div id="player1">
-          Player 1 <br>
-          Score: 0 <br>
-          Phase: 0
-      </div>
-      <br>
-      <div id="player2">
-          Player 2 <br>
-          Score: 0 <br>
-          Phase: 0
-      </div>
+    <div class="vertical playersbar" id="playerbar">
+      hi
     </div>
     <div class="vertical mainblock" id="mainblock">
         <div id="">
