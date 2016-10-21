@@ -16,7 +16,7 @@ function join_game(game_id){
         window.game_id = $("#game_id").val();
         game_id = $("#game_id").val();
     }
-    $.getJSON("/p10/api/join/"+game_id, function(data){
+    $.getJSON("/p10/api/join/"+window.game_id, function(data){
         window.player_id = data["return"];
     });
     $.getJSON("/p10/api/game_info/"+game_id, function(data){
@@ -38,11 +38,21 @@ function listener_loop() {
 }
 
 function full_update(){
-    //update_game_info();
+    update_game_info();
     update_players();
     update_hand();
-    console.log("full update");
 }
+
+function update_game_info(){
+    console.log("game info update");
+    $.getJSON("/p10/api/game_info/" + window.game_id, function(data){
+        window.turn = data['turn'];
+        window.round = data['round'];
+        window.dealer = data['dealer'];
+        window.title = data['title'];
+    });
+}
+
 
 function update_players(){
     $.getJSON("/p10/api/players/" + window.game_id, function(data){
@@ -56,6 +66,8 @@ function update_players(){
             $("#playerbar").html($("#playerbar").html()+ct(data["return"][pl]));
         }
         $("#player"+window.player_id).css("font-weight","bold");
+        $("[id^=dealer]").css("display","none");
+        $("#dealer"+window.dealer).css("display","inline-block");
     });
 }
 
@@ -71,8 +83,11 @@ function update_hand(){
     });
 }
 
-
-
-
-
+function deal_round(){
+    if(window.dealer == window.player_id){
+        $.getJSON("/p10/api/deal/" + window.game_id, function(data){
+            console.log("deal");
+        });
+    }
+}
 

@@ -9,7 +9,7 @@
     <script id="player_template" type="text/x-handlebars-template">
         <div id="player{{id}}">
           Player {{id}} <br>
-          Score: {{score}} <br>
+          Score: {{score}} <b style="display: none;" id="dealer{{id}}">DEALER</b> <br> 
           Phase: {{phase}}
         </div> <br>
     </script>
@@ -35,6 +35,8 @@
       hi
     </div>
     <div class="vertical mainblock" id="mainblock">
+        <button id="deal_button" onclick="deal_round()">Deal Round</button>
+        <button id="down_button">Lay Down</button>
         <div id="">
             hi
         </div>

@@ -18,14 +18,14 @@ def get_players(session, game_id):
     return retval
 
 def get_cards(session, game_id, location):
-    res = session.query(Card).filter((Card.location == location)&(Game.game_id == game_id)).order_by(Card.pos.asc()).all()
+    res = session.query(Card).filter((Card.location == location)&(Card.game_id == game_id)).order_by(Card.pos.asc()).all()
     retval = []
     for x in res:
         retval.append(x)
     return retval
 
 def get_all_cards(session, game_id):
-    res = session.query(Card).filter((Game.game_id == game_id)).order_by(Card.pos.asc()).all()
+    res = session.query(Card).filter((Card.game_id == game_id)).order_by(Card.pos.asc()).all()
     retval = []
     for x in res:
         retval.append(x)
