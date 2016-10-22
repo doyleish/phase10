@@ -41,6 +41,7 @@ function full_update(){
     update_game_info();
     update_players();
     update_hand();
+    update_decks();
 }
 
 function update_game_info(){
@@ -80,6 +81,20 @@ function update_hand(){
             var ct = Handlebars.compile($("#card_template").html());
             $("#handblock").html($("#handblock").html()+ct(data["return"][card]));
         }
+    });
+}
+
+function update_decks(){
+    $.getJSON("/p10/api/top_discard/"+window.game_id, function(data){
+        console.log("deck update");
+        $("#mainblock").html("");
+        $("#mainblock").text("");
+        var ct = Handlebars.compile($("#card_template").html());
+        var cd = "";
+        if (data["card_id"] >= 0){
+            cd = ct(data);
+        }
+        $("#mainblock").html(cd + ct({"pos":"150px","value":"?","color":"grey","card_id":"main"}))
     });
 }
 

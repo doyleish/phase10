@@ -42,7 +42,7 @@ def join_game(game_id):
 @app.route('/p10/api/top_discard/<game_id>')
 def top_discard(game_id):
     # returns the card json
-    return db.top_discard(s(), game_id).jsonify()
+    return jsonify(db.top_discard(s(), game_id))
 
 @app.route('/p10/api/top_main/<game_id>')
 def top_main(game_id):

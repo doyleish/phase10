@@ -2,8 +2,9 @@
   <head>
     <!-- templates -->
     <script id="card_template" type="text/x-handlebars-template">
-        <div class="card" style="left: {{pos}};">
-            <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b>
+        <div class="card" style="margin-left: {{pos}};">
+            <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
+            <input style="zoom: 1.8;" type="checkbox" id="card{{card_id}}">
         </div>
     </script>
     <script id="player_template" type="text/x-handlebars-template">
@@ -30,13 +31,17 @@
 
   </div>
   <div style="display: none;" id="game">
-    <h1 class="horizontal game_title" id="game_title"></h1>
+    <div class="horizontal game_title">
+        <span id="game_title"></span>
+        <button id="deal_button" onclick="deal_round()">Deal Round</button>
+        <button id="draw_button" onclick="draw()">Draw</button>
+        <button id="discard_button" onclick="discard()">Discard</button>
+        <button id="down_button">Lay Down</button>
+    </div>
     <div class="vertical playersbar" id="playerbar">
       hi
     </div>
     <div class="vertical mainblock" id="mainblock">
-        <button id="deal_button" onclick="deal_round()">Deal Round</button>
-        <button id="down_button">Lay Down</button>
         <div id="">
             hi
         </div>

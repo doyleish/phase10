@@ -94,7 +94,11 @@ def top_main(session, game_id):
     return get_cards(session, game_id, -1)[-1]
 
 def top_discard(session, game_id):
-    return get_cards(session, game_id, -2)[-1]
+    stack = get_cards(session, game_id, -2)
+    if len(stack):
+        return stack[-1].dictify()
+    else:
+        return {'card_id':-1}
 
 def draw_main(session, game_id, player_id=-1):
     game = get_game(session, game_id)
