@@ -8,11 +8,14 @@
         </div>
     </script>
     <script id="player_template" type="text/x-handlebars-template">
-        <div id="player{{id}}">
-          Player {{id}} <br>
-          Score: {{score}} <b style="display: none;" id="dealer{{id}}">DEALER</b> <br> 
-          Phase: {{phase}}
-        </div> <br>
+        <div class="playeritem">
+            <input style="zoom: 1.8;" type="checkbox" id="player{{id}}">
+            <div id="player_info{{id}}" style="display: inline-block;">
+                Player {{id}} <b style="display: none;" id="turn{{id}}">TURN</b> <br>
+                Score: {{score}} <b style="display: none;" id="dealer{{id}}">DEALER</b> <br> 
+                Phase: {{phase}}
+            </div>
+        </div>
     </script>
     
     <!-- style -->
@@ -32,11 +35,15 @@
   </div>
   <div style="display: none;" id="game">
     <div class="horizontal game_title">
-        <span id="game_title"></span>
-        <button id="deal_button" onclick="deal_round()">Deal Round</button>
-        <button id="draw_button" onclick="draw()">Draw</button>
-        <button id="discard_button" onclick="discard()">Discard</button>
-        <button id="down_button">Lay Down</button>
+        <b id="game_title"></b>
+        <span id="buttonblock" style="display:none;">
+            <button onclick="deal_round()">Deal Round</button>
+            <button onclick="draw()">Draw</button>
+            <button onclick="discard()">Discard</button>
+            <button onclick="lay_down()">Lay Down</button>
+            <button onclick="skip()">Skip</button>
+        </span>
+        <span id="messagearea" style="float:right;"></span>
     </div>
     <div class="vertical playersbar" id="playerbar">
       hi

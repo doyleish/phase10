@@ -44,6 +44,14 @@
     
 }
 
+.playeritem {
+    display: block;
+    margin: 15 auto;
+    border-width: 1px;
+    border-bottom: solid;
+    
+}
+
 .handblock {
     min-height: 250px;
     position: absolute;

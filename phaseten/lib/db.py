@@ -17,6 +17,10 @@ def get_players(session, game_id):
         retval.append(x)
     return retval
 
+def get_card(session, game_id, card_id):
+    retval = session.query(Card).filter((Card.card_id == card_id)&(Card.game_id == game_id)).order_by(Card.pos.asc()).one()
+    return retval
+
 def get_cards(session, game_id, location):
     res = session.query(Card).filter((Card.location == location)&(Card.game_id == game_id)).order_by(Card.pos.asc()).all()
     retval = []
@@ -56,18 +60,19 @@ def _state_check(main_pile, discard_pile):
 def _card_bootstrap(session, game_id):
         # mfw SQLite doesn't support autoinc on composite primary keys :(
         count = 0
+        
+        for x in range(4):
+            session.add(Card(game_id=game_id, skip=True, pos=count, card_id=count))
+            count += 1
+        
+        for x in range(8):
+            session.add(Card(game_id=game_id, wild=True, pos=count, card_id=count))
+            count += 1
+        
         for color in (1,1,2,2,3,3,4,4):
             for number in (1,2,3,4,5,6,7,8,9,10,11,12):
                 session.add(Card(game_id=game_id, number=number, color=color, pos=count, card_id=count))
                 count += 1
-
-        for x in range(4):
-            session.add(Card(game_id=game_id, skip=True, pos=count, card_id=count))
-            count += 1
-
-        for x in range(8):
-            session.add(Card(game_id=game_id, wild=True, pos=count, card_id=count))
-            count += 1
 
 def create_game(session):
     game = Game()
@@ -114,8 +119,9 @@ def draw_main(session, game_id, player_id=-1):
     pile[-1].location = player_id
     pile[-1].pos = len(hand) # append card to end of hand
     
+    game.ac += 1
     session.commit()
-    return
+    return "GOOD"
     
 def draw_discard(session, game_id):
     game = get_game(session, game_id)
@@ -124,23 +130,29 @@ def draw_discard(session, game_id):
     discard = get_cards(session, game_id, -2)
     hand = get_cards(session, game_id, player_id)
 
-    if (not len(discard)) or discard[-1].wild or discard[-1].skip:
+    if (not len(discard)):
         return "BAD"
 
     discard[-1].location = player_id
     discard[-1].pos = len(hand) # append card to end of hand
     
+    game.ac += 1
     session.commit()
     return "GOOD"
 
 def discard(session, game_id, card_id):
     game = get_game(session, game_id)
     card = get_card(session, game_id, card_id)
+    
+    players = get_players(session, game_id)
+    dealer = game.game_round%len(players)
+    
     discard_pile = get_cards(session, game_id, -2)
     card.location = -2
     card.pos = len(discard_pile)
-    game.ac += 1
 
+    game.ac += 1
+    game.player_turn = (game.player_turn+1)%len(players)
     session.commit()
     return "GOOD"
 

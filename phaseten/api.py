@@ -52,11 +52,11 @@ def top_main(game_id):
 @app.route('/p10/api/draw_discard/<game_id>')
 def draw_discard(game_id):
     # returns card
-    return db.draw_discard(s(), game_id).jsonify()
+    return jsonify(db.draw_discard(s(), game_id))
 
 @app.route('/p10/api/draw_main/<game_id>')
 def draw_main(game_id):
-    return db.draw_deck(s(), game_id).jsonify()
+    return jsonify(db.draw_main(s(), game_id))
 
 @app.route('/p10/api/discard/<game_id>/<card_id>')
 def discard(game_id, card_id):
