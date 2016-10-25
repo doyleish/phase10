@@ -1,7 +1,7 @@
 from lib.card import Card
 from lib.player import Player
 from lib.game import Game
-
+from lib.phases import PHASECHECKS
 import random
 
 def get_game(session, game_id):
@@ -40,6 +40,52 @@ def get_dict_players(session, game_id):
     for x in get_players(session, game_id):
         ret.append(x.dictify())
     return ret
+
+def lay_down(session, game_id, cardset):
+    game = get_game(session, game_id)
+    player = get_player(session, game_id, game.player_turn)
+    hand = get_cards(session, game_id, game.player_turn)
+    num_players = len(get_players(session, game_id))
+    
+    cards = []
+    for subset in cardset.strip(':').split(":"):
+        sv = []
+        for c in subset.split('-'):
+            sv.append(get_card(session, game_id, c))
+
+    check = PHASECHECKS[player.phase](cards)
+    if(check):
+        player.down = True
+        for pile in cards:
+            game.piles += 1
+            for card in range(len(pile)):
+                pile[card].location = game.piles+num_players
+                pile[card].pos = card
+                # move card into pile
+        game.ac+=1
+        session.commit()
+        return "Good"
+    else:
+        return "Bad"
+
+    
+
+def get_phases(session, game_id):
+    game = get_game(session, game_id)
+    players = get_players(session, game_id)
+    num_phases = game.phases
+    ret = {}
+    for phase in range(num_phases):
+        pos = 0
+        ret[str(phase)] = []
+        cards = get_cards(session, game_id, phase+len(players))
+        for card in cards:
+            c = card.dictify()
+            c['pos'] = pos
+            ret[str(phase)].append(c)
+            pos+=41
+    return ret
+
 
 def _state_check(main_pile, discard_pile):
     if len(main_pile) == 1:

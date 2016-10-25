@@ -65,17 +65,14 @@ def discard(game_id, card_id):
 
 @app.route('/p10/api/down/<game_id>')
 def lay_down(game_id):
-    if db.check_phase(s(), game_id):
-        pass
+    return jsonify(db.check_phase(s(), game_id))
 
 @app.route('/p10/api/ac/<game_id>')
 def get_ac(game_id):
-    # return action_counter
     return jsonify(db.get_game(s(), game_id).ac)
 
 @app.route('/p10/api/game_info/<game_id>')
 def game_info(game_id):
-    # return action_counter
     return db.get_game(s(), game_id).jsonify()
 
 @app.route('/p10/api/hand/<game_id>/<player_id>')
@@ -85,6 +82,10 @@ def hand(game_id, player_id):
 @app.route('/p10/api/players/<game_id>')
 def players(game_id):
     return jsonify(db.get_dict_players(s(), game_id))
+
+@app.route('/p10/api/phases/<game_id>')
+def phases(game_id):
+    return jsonify(db.get_phases(s(), game_id))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10101)

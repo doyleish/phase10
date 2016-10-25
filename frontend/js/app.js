@@ -67,6 +67,9 @@ function update_game_info(){
         window.dealer = data['dealer'];
         window.title = data['title'];
     });
+    syncJSON("/p10/api/players/" + window.game_id, function(data){
+        window.phase = data["return"][window.player_id]["phase"];
+    });
 }
 
 
@@ -94,8 +97,12 @@ function update_hand(){
         console.log("hand update");
         $("#handblock").html("");
         $("#handblock").text("");
+        var prefix = ""
+        if([1,2,3,7,9,10].indexOf(window.phase) > -1){
+            prefix = "alt_";
+        }
         for(var card in data["return"]){
-            var ct = Handlebars.compile($("#card_template").html());
+            var ct = Handlebars.compile($("#"+prefix+"card_template").html());
             $("#handblock").html($("#handblock").html()+ct(data["return"][card]));
         }
     });
@@ -115,6 +122,7 @@ function update_decks(){
         $("#mainblock").html("");
         $("#mainblock").text("");
         var ct = Handlebars.compile($("#card_template").html());
+        var bct = Handlebars.compile($("#blank_card_template").html());
         var cd = "";
         if (data["card_id"] >= 0){
             if(data["card_id"] <= 3){
@@ -123,7 +131,10 @@ function update_decks(){
                 data["card_id"] = "disc";
             }
             cd = ct(data);
+        }else{
+            cd = bct({});
         }
+
         $("#mainblock").html(cd + ct({"pos":"150px","value":"?","color":"grey","card_id":"main"}))
     });
 }

@@ -13,11 +13,13 @@ class Player(Base):
     player_id = Column(Integer, primary_key=True)
     phase = Column(Integer)
     score = Column(Integer)
+    down = Column(Boolean)
     
     DEFAULTS = {
         'game_id': -1,
         'phase': 1,
-        'score': 0
+        'score': 0,
+        'down': False
     }
 
     def __init__(self, **kwargs):
@@ -36,7 +38,8 @@ class Player(Base):
     def dictify(self):
         return {'id': self.player_id,
                 'phase': self.phase,
-                'score': self.score}
+                'score': self.score,
+                'down': self.down}
 
     def jsonify(self):
         return json.dumps(self.dictify())

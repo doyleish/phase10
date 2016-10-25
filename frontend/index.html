@@ -4,7 +4,19 @@
     <script id="card_template" type="text/x-handlebars-template">
         <div class="card" style="margin-left: {{pos}};">
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
-            <input style="zoom: 1.8;" type="checkbox" id="card{{card_id}}">
+            <input style="zoom: 1.8;" type="checkbox" id="card{{card_id}}"><br>
+        </div>
+    </script>
+    <script id="alt_card_template" type="text/x-handlebars-template">
+        <div class="card" style="margin-left: {{pos}};">
+            <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
+            <input style="zoom: 1.8;" type="checkbox" id="card{{card_id}}"><br>
+            <input style="zoom: 1.8;" type="checkbox" id="cardalt{{card_id}}"><br>
+        </div>
+    </script>
+    <script id="blank_card_template" type="text/x-handlebars-template">
+        <div class="card blankcard">
+            <b>Empty Pile</b>
         </div>
     </script>
     <script id="player_template" type="text/x-handlebars-template">
@@ -15,6 +27,17 @@
                 Score: {{score}} <b style="display: none;" id="dealer{{id}}">DEALER</b> <br> 
                 Phase: {{phase}}
             </div>
+        </div>
+    </script>
+    <script id="pilecontainer_template" type="text/x-handlebars-template">
+        <div class="pilecontainer">
+            <input style="zoom: 1.8;" type="checkbox" id="pile{{id}}">
+            {{contents}}
+        </div>
+    </script>
+    <script id="pilecard_template" type="text/x-handlebars-template">
+        <div class="pilecard" style="background-color: {{color}}; margin-left: {{pos}};">
+            &nbsp{{value}}&nbsp
         </div>
     </script>
     

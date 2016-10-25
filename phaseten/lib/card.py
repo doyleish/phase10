@@ -19,10 +19,7 @@ class Card(Base):
     -1 = main pile
     0 = player 0 hand (player)
     1 = player 1 hand (player)
-    2 = player 0 phase pile0 (pile+1)*numplayers + player
-    3 = player 1 phase pile0
-    4 = player 0 phase pile1
-    5 = player 1 phase pile1
+    2 = phase pile0 (pile+numplayers)
     """
 
     game_id = Column(Integer, primary_key=True) # game id that the card belongs to
@@ -95,4 +92,32 @@ class Card(Base):
 
     def jsonify(self):
         return json.dumps(self.dictify())
+
+    def __eq__(self, compare):
+        if(self.wild || compare.wild):
+            return True
+        if(self.skip || compare.skip):
+            return False
+        return (self.number == compare.number)
+
+    def color(self, compare):
+        if(self.wild || compare.wild):
+            return True
+        if(self.skip || compare.skip):
+            return False
+        return (self.color == compare.color)
+
+    def __lt__(self, compare):
+        if(self.wild || compare.wild):
+            return True
+        if(self.skip || compare.skip):
+            return False
+        return (self.number<compare.number)
+    
+    def __gt__(self, compare):
+        if(self.wild || compare.wild):
+            return True
+        if(self.skip || compare.skip):
+            return False
+        return (self.number>compare.number)
 

@@ -28,8 +28,8 @@
 
 .mainblock {
     float: left;
-    min-width: calc(95% - 500px);
-    padding: 10px;
+    min-width: 334px;
+    padding: 30px;
     
     border: solid;
     border-width: 0 1px 0 1px;
@@ -38,8 +38,8 @@
 }
 
 .phaseblock {
+    padding: 10px;
     text-align: right;
-    min-width: 300px;
     float: right;
     
 }
@@ -78,3 +78,25 @@
     text-align: left;
 }
 
+.blankcard {
+    border-style: dashed;
+    text-align: center;
+    padding: 50px 0 0 0;
+}
+
+.pilecontainer {
+    margin: 5px 0;
+    padding: 0;
+    display: inline-block;
+}
+
+.pilecard {
+    font-size: 19pt;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    padding: 3px 0 0 0;
+}
