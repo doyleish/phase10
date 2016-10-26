@@ -1,17 +1,23 @@
 <html>
   <head>
     <!-- templates -->
-    <script id="card_template" type="text/x-handlebars-template">
+    <script id="deck_card_template" type="text/x-handlebars-template">
         <div class="card" style="margin-left: {{pos}};">
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
-            <input style="zoom: 1.8;" type="checkbox" id="card{{card_id}}"><br>
+            <input style="zoom: 1.8;" type="checkbox" id="deckcard{{card_id}}"><br>
+        </div>
+    </script>
+    <script id="hand_card_template" type="text/x-handlebars-template">
+        <div class="card" style="margin-left: {{pos}};">
+            <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
+            <input style="zoom: 1.8;" type="checkbox" id="handcard{{card_id}}"><br>
         </div>
     </script>
     <script id="alt_card_template" type="text/x-handlebars-template">
         <div class="card" style="margin-left: {{pos}};">
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
-            <input style="zoom: 1.8;" type="checkbox" id="card{{card_id}}"><br>
-            <input style="zoom: 1.8;" type="checkbox" id="cardalt{{card_id}}"><br>
+            <input style="zoom: 1.8;" type="checkbox" id="handcard{{card_id}}"><br>
+            <input style="zoom: 1.8;" type="checkbox" id="altcard{{card_id}}"><br>
         </div>
     </script>
     <script id="blank_card_template" type="text/x-handlebars-template">
@@ -31,13 +37,14 @@
     </script>
     <script id="pilecontainer_template" type="text/x-handlebars-template">
         <div class="pilecontainer">
-            <input style="zoom: 1.8;" type="checkbox" id="pile{{id}}">
-            {{contents}}
-        </div>
+            <input style="zoom: 1.8;" type="checkbox" id="pile{{id}}-0">
+            {{{content}}}
+            <input style="zoom: 1.8;" type="checkbox" id="pile{{id}}-1">
+        </div><br>
     </script>
     <script id="pilecard_template" type="text/x-handlebars-template">
-        <div class="pilecard" style="background-color: {{color}}; margin-left: {{pos}};">
-            &nbsp{{value}}&nbsp
+        <div class="pilecard" style="background-color: {{color}}; margin-left: 1px;">
+            <b><font style="font-size: 18pt; color: white;">&nbsp{{value}}&nbsp</font></b>
         </div>
     </script>
     
@@ -64,6 +71,7 @@
             <button onclick="draw()">Draw</button>
             <button onclick="discard()">Discard</button>
             <button onclick="lay_down()">Lay Down</button>
+            <button onclick="hit()">Hit</button>
             <button onclick="skip()">Skip</button>
         </span>
         <span id="messagearea" style="float:right;"></span>

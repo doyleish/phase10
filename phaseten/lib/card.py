@@ -94,30 +94,30 @@ class Card(Base):
         return json.dumps(self.dictify())
 
     def __eq__(self, compare):
-        if(self.wild || compare.wild):
+        if(self.wild or compare.wild):
             return True
-        if(self.skip || compare.skip):
+        if(self.skip or compare.skip):
             return False
         return (self.number == compare.number)
 
-    def color(self, compare):
-        if(self.wild || compare.wild):
+    def _color(self, compare):
+        if(self.wild or compare.wild):
             return True
-        if(self.skip || compare.skip):
+        if(self.skip or compare.skip):
             return False
         return (self.color == compare.color)
 
     def __lt__(self, compare):
-        if(self.wild || compare.wild):
+        if(self.wild or compare.wild):
             return True
-        if(self.skip || compare.skip):
+        if(self.skip or compare.skip):
             return False
         return (self.number<compare.number)
     
     def __gt__(self, compare):
-        if(self.wild || compare.wild):
+        if(self.wild or compare.wild):
             return True
-        if(self.skip || compare.skip):
+        if(self.skip or compare.skip):
             return False
         return (self.number>compare.number)
 

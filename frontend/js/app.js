@@ -53,6 +53,7 @@ function listener_loop() {
 
 function full_update(){
     update_game_info();
+    update_phases();
     update_players();
     update_hand();
     update_decks();
@@ -92,12 +93,31 @@ function update_players(){
     });
 }
 
+function update_phases(){
+    $.getJSON("/p10/api/phases/" + window.game_id, function(data){
+        console.log("phase update");
+        $("#phaseblock").html("");
+        $("#phaseblock").text("");
+        var cw = Handlebars.compile($("#pilecontainer_template").html());
+        var cc = Handlebars.compile($("#pilecard_template").html());
+        for(var pile in data){
+            var content = "";
+            for(var card in data[pile]){
+                console.log(data[pile][card]);
+                content+=cc(data[pile][card]);
+            }
+            console.log(content);
+            $("#phaseblock").html($("#phaseblock").html()+cw({'content':content}));
+        }
+    });
+}
+
 function update_hand(){
     $.getJSON("/p10/api/hand/" + window.game_id + "/" + window.player_id, function(data){
         console.log("hand update");
         $("#handblock").html("");
         $("#handblock").text("");
-        var prefix = ""
+        var prefix = "hand_"
         if([1,2,3,7,9,10].indexOf(window.phase) > -1){
             prefix = "alt_";
         }
@@ -111,8 +131,10 @@ function update_hand(){
 function update_buttons(){
     if(window.turn == window.player_id){
         $("#buttonblock").css("display","inline");
+        $("input").css("display","inline");
     }else{
         $("#buttonblock").css("display","none");
+        $("input").css("display","none");
     }
 }
 
@@ -121,7 +143,7 @@ function update_decks(){
         console.log("deck update");
         $("#mainblock").html("");
         $("#mainblock").text("");
-        var ct = Handlebars.compile($("#card_template").html());
+        var ct = Handlebars.compile($("#deck_card_template").html());
         var bct = Handlebars.compile($("#blank_card_template").html());
         var cd = "";
         if (data["card_id"] >= 0){
@@ -156,12 +178,12 @@ function draw(){
         return;
     }
     console.log("draw");
-    var checked = $("input[id^=card]:checked");
+    var checked = $("input[id^=deckcard]:checked");
     if(checked.length!=1){
         message("Bad card selection");
         return;
     }
-    var card = checked[0].id.replace('card','');
+    var card = checked[0].id.replace('deckcard','');
     if(card == "skip"){
         message("Cannot Draw a Skip");
         return;
@@ -185,14 +207,36 @@ function discard(){
         return;
     }
     console.log("discard");
-    var checked = $("input[id^=card]:checked");
+    var checked = $("input[id^=handcard]:checked");
     if(checked.length!=1){
         message("Bad card selection");
         return;
     }
-    var card = checked[0].id.replace('card','');
+    var card = checked[0].id.replace('handcard','');
     $.getJSON("/p10/api/discard/"+window.game_id+"/"+card);
     window.drawn = false;
+    setlock();
+}
+
+function hit(){
+    if(checklock()){return;}
+    console.log("hit");
+}
+
+function lay_down(){
+    if(checklock()){return;}
+    console.log("lay_down");
+    var card_set_1 = "";
+    var card_set_2 = "";
+    var q1 = $("input[id^=handcard]:checked");
+    var q2 = $("input[id^=altcard]:checked");
+    for(var x=0; x<q1.length;x++){
+        card_set_1 += q1[x].id.replace('handcard','') + '-';
+    }
+    for(var x=0; x<q2.length;x++){
+        card_set_2 += q2[x].id.replace('altcard','') + '-';
+    }
+    $.getJSON("/p10/api/down/"+window.game_id+"/"+card_set_1+"_"+card_set_2);
     setlock();
 }
 
@@ -200,13 +244,13 @@ function skip(){
     if(checklock()){return;}
     console.log("skip");
     var checked_player = $("input[id^=player]:checked");
-    var checked_card = $("input[id^=card]:checked");
+    var checked_card = $("input[id^=handcard]:checked");
     if(checked_player.length!=1 || checked_card.length!=1){
         message("Bad card selection");
         return;
     }
     var pid = checked_player[0].id.replace('player','');
-    var cid = checked_card[0].id.replace('card','');
+    var cid = checked_card[0].id.replace('handcard','');
     $.getJSON("/p10/api/skip/"+window.game_id+"/"+pid+"/"+cid);
     setlock();
 }

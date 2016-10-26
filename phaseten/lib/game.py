@@ -14,12 +14,18 @@ class Game(Base):
     game_round = Column(Integer)
     player_turn = Column(Integer)
     ac = Column(Integer)
+    piles_set = Column(Integer)
+    piles_run = Column(Integer)
+    piles_color = Column(Integer)
     
     DEFAULTS = {
         'dealer': 0,
         'game_round': 0,
         'player_turn': 0,
-        'ac': 0
+        'ac': 0,
+        'piles_set': 0,
+        'piles_run': 0,
+        'piles_color': 0
     }
 
     def __init__(self):
