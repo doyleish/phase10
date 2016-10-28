@@ -120,14 +120,14 @@ def hit(session, game_id, card_id, pile_id, side):
         for i in range(len(pile)):
             pile[i].location = pile_id
             pile[i].pos = i
+        session.flush()
+        
+        if round_over_check(session, game_id):
+            end_round(session, game_id)
+            return
+        
+        game.ac+=1
     
-    session.flush()
-    
-    if round_over_check(session, game_id):
-        end_round(session, game_id)
-        return
-    
-    game.ac+=1
     session.commit()
     
 

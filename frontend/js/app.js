@@ -37,7 +37,7 @@ function join_game(game_id){
     })
     window.drawn = false;
     window.dealt = false;
-    setInterval(listener_loop, 1500);
+    setInterval(listener_loop, 500);
 }
 
 function listener_loop() {
