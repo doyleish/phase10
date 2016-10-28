@@ -54,10 +54,16 @@ def inc_turn(session, game_id):
     game = get_game(session, game_id)
     players = get_players(session, game_id)
     if round_over_check(session, game_id):
-        end_round(game, players)
+        end_round(session, game_id)
         return
     
     game.player_turn = (game.player_turn+1)%len(players)
+    while(True):
+        if(players[game.player_turn].skip > 0):
+            players[game.player_turn].skip -= 1
+            game.player_turn = (game.player_turn+1)%len(players)
+        else:
+            break
     game.ac+=1
     session.commit()
 
@@ -76,10 +82,14 @@ def end_round(session, game_id):
     for i in range(len(cards)):
         cards[i].location = -1
         cards[i].pos = i
-
+    
+    game.piles_set = 0
+    game.piles_run = 0
+    game.piles_color = 0
+    
     game.game_round += 1
     game.dealer = (game.dealer+1)%len(players)
-    game.turn = game.dealer
+    game.player_turn = game.dealer
     game.ac+=1
     
     session.commit()
@@ -138,6 +148,10 @@ def lay_down(session, game_id, cardset):
     check = phases.PHASECHECKS[player.phase](cards)
     if(check):
         player.down = True
+        player.phase+=1
+        if(player.phase>10):
+            game.player_turn = -1
+            game.dealer = -1
         for pile in check['set']:
             i = 0
             for card in pile:
@@ -284,6 +298,12 @@ def draw_discard(session, game_id):
     session.commit()
     return "GOOD"
 
+def skip(session, game_id, player_id):
+    player = get_player(session, game_id, player_id);
+    player.skip += 1;
+    session.commit()
+    return "GOOD"
+
 def discard(session, game_id, card_id):
     game = get_game(session, game_id)
     card = get_card(session, game_id, card_id)
@@ -328,8 +348,9 @@ def deal_round(session, game_id):
     
     # update game obj to reflect next round
     game.game_round += 1
+    
+    inc_turn(session, game_id)
 
-    session.commit()
     return "GOOD"
 
 def rearrange_hand(session, game_id, player_id, indices):

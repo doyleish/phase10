@@ -36,11 +36,11 @@ function join_game(game_id){
         $('#ac').val(0);
     })
     window.drawn = false;
+    window.dealt = false;
     setInterval(listener_loop, 1500);
 }
 
 function listener_loop() {
-    console.log(window.ac);
     $.getJSON("/p10/api/ac/"+window.game_id, function(data){
         if(data["return"] > window.ac){
             window.ac = data["return"];
@@ -70,6 +70,7 @@ function update_game_info(){
     });
     syncJSON("/p10/api/players/" + window.game_id, function(data){
         window.phase = data["return"][window.player_id]["phase"];
+        window.down = data["return"][window.player_id]["down"];
     });
 }
 
@@ -94,10 +95,10 @@ function update_players(){
 }
 
 function update_phases(){
+    $("#phaseblock").html("");
+    $("#phaseblock").text("");
     $.getJSON("/p10/api/phases/" + window.game_id, function(data){
         console.log("phase update");
-        $("#phaseblock").html("");
-        $("#phaseblock").text("");
         var cw = Handlebars.compile($("#pilecontainer_template").html());
         var cc = Handlebars.compile($("#pilecard_template").html());
         for(var pile in data){
@@ -106,13 +107,13 @@ function update_phases(){
                 console.log(data[pile][card]);
                 content+=cc(data[pile][card]);
             }
-            console.log(content);
-            $("#phaseblock").html($("#phaseblock").html()+cw({'content':content}));
+            $("#phaseblock").html($("#phaseblock").html()+cw({'content':content, 'id':pile}));
         }
     });
 }
 
 function update_hand(){
+    window.dealt = false;
     $.getJSON("/p10/api/hand/" + window.game_id + "/" + window.player_id, function(data){
         console.log("hand update");
         $("#handblock").html("");
@@ -122,9 +123,16 @@ function update_hand(){
             prefix = "alt_";
         }
         for(var card in data["return"]){
+            window.dealt = true;
             var ct = Handlebars.compile($("#"+prefix+"card_template").html());
             $("#handblock").html($("#handblock").html()+ct(data["return"][card]));
         }
+        if(window.dealt){
+            $("#dealbutton").css("display","none");
+        }else{
+            $("#dealbutton").css("display","inline");
+        }
+
     });
 }
 
@@ -177,6 +185,10 @@ function draw(){
         message("Already drew a card");
         return;
     }
+    if(!window.dealt){
+        message("Have not been dealt to yet");
+        return;
+    }
     console.log("draw");
     var checked = $("input[id^=deckcard]:checked");
     if(checked.length!=1){
@@ -196,7 +208,7 @@ function draw(){
         message("Bad card selection");
         return;
     }
-    window.drawn = true;
+    window.drawn=true;
     setlock();
 }
 
@@ -220,7 +232,26 @@ function discard(){
 
 function hit(){
     if(checklock()){return;}
+    if(!window.down){
+        message("Not down yet! don't do that");
+        return;
+    }
     console.log("hit");
+    var pile = $("input[id^=pile]:checked");
+    var card = $("input[id^=handcard]:checked");
+    
+    if(pile.length!=1 || card.length!=1){
+        message("Bad card selection");
+        return;
+    }
+    var pile_str = pile[0].id.replace('pile','').split("-")
+    var pile_id = pile_str[0]
+    var side = pile_str[1]
+    var card_id = card[0].id.replace('handcard','')
+
+    $.getJSON("/p10/api/hit/"+window.game_id+"/"+card_id+"/"+pile_id+"/"+side)
+    
+    setlock();
 }
 
 function lay_down(){
@@ -251,8 +282,10 @@ function skip(){
     }
     var pid = checked_player[0].id.replace('player','');
     var cid = checked_card[0].id.replace('handcard','');
-    $.getJSON("/p10/api/skip/"+window.game_id+"/"+pid+"/"+cid);
-    setlock();
+    $.getJSON("/p10/api/skip/"+window.game_id+"/"+pid, function(data){
+        console.log(data)
+        discard();
+    });
 }
 
 function setlock(){

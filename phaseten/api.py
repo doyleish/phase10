@@ -63,13 +63,17 @@ def discard(game_id, card_id):
     "GOOD if success"
     return jsonify(db.discard(s(), game_id, card_id))
 
+@app.route('/p10/api/skip/<game_id>/<player_id>')
+def skip(game_id, player_id):
+    return jsonify(db.skip(s(), game_id, player_id))
+
 @app.route('/p10/api/down/<game_id>/<cardset>')
 def lay_down(game_id, cardset):
     return jsonify(db.lay_down(s(), game_id, cardset))
 
 @app.route('/p10/api/hit/<game_id>/<card_id>/<pile_id>/<side>')
 def hit(game_id, card_id, pile_id, side):
-    return jsonify(db.hit(s(), game_id, card_id, pile_id, side))
+    return jsonify(db.hit(s(), game_id, card_id, int(pile_id), int(side)))
 
 @app.route('/p10/api/ac/<game_id>')
 def get_ac(game_id):

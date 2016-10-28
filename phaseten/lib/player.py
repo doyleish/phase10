@@ -14,12 +14,14 @@ class Player(Base):
     phase = Column(Integer)
     score = Column(Integer)
     down = Column(Boolean)
+    skip = Column(Integer)
     
     DEFAULTS = {
         'game_id': -1,
         'phase': 1,
         'score': 0,
-        'down': False
+        'down': False,
+        'skip': 0
     }
 
     def __init__(self, **kwargs):
@@ -39,7 +41,8 @@ class Player(Base):
         return {'id': self.player_id,
                 'phase': self.phase,
                 'score': self.score,
-                'down': self.down}
+                'down': self.down,
+                'skip': self.skip>0}
 
     def jsonify(self):
         return json.dumps(self.dictify())
