@@ -125,7 +125,7 @@ function update_hand(){
         for(var card in data["return"]){
             window.dealt = true;
             var ct = Handlebars.compile($("#"+prefix+"card_template").html());
-            $("#handblock").html($("#handblock").html()+ct(data["return"][card]));
+            $("#handblock").html($("#handblock").html()+ct($.extend({},data["return"][card],{'offset':data["return"][card]['pos']*50})));
         }
         if(window.dealt){
             $("#dealbutton").css("display","none");
@@ -165,7 +165,7 @@ function update_decks(){
             cd = bct({});
         }
 
-        $("#mainblock").html(cd + ct({"pos":"150px","value":"?","color":"grey","card_id":"main"}))
+        $("#mainblock").html(cd + ct({"offset":"150","value":"?","color":"grey","card_id":"main"}))
     });
 }
 

@@ -88,6 +88,7 @@ class Card(Base):
         
         return {'card_id': self.card_id,
                 'value': val,
+                'pos': self.pos,
                 'color': COLOR_MAP[self.color]}
 
     def jsonify(self):

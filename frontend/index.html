@@ -2,19 +2,19 @@
   <head>
     <!-- templates -->
     <script id="deck_card_template" type="text/x-handlebars-template">
-        <div class="card" style="margin-left: {{pos}};">
+        <div class="card" style="margin-left: {{offset}}px;">
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
             <input style="zoom: 1.8;" type="checkbox" id="deckcard{{card_id}}"><br>
         </div>
     </script>
     <script id="hand_card_template" type="text/x-handlebars-template">
-        <div class="card" style="margin-left: {{pos}};">
+        <div class="card" style="margin-left: {{offset}}px;">
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
             <input style="zoom: 1.8;" type="checkbox" id="handcard{{card_id}}"><br>
         </div>
     </script>
     <script id="alt_card_template" type="text/x-handlebars-template">
-        <div class="card" style="margin-left: {{pos}};">
+        <div class="card" style="margin-left: {{offset}}px;">
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
             <input style="zoom: 1.8;" type="checkbox" id="handcard{{card_id}}"><br>
             <input style="zoom: 1.8;" type="checkbox" id="altcard{{card_id}}"><br>
@@ -31,7 +31,7 @@
             <div id="player_info{{id}}" style="display: inline-block;">
                 Player {{id}} <b>{{#if skip}}skipped{{/if}}</b><b style="display: none;" id="turn{{id}}">TURN</b> <br>
                 Score: {{score}} <b style="display: none;" id="dealer{{id}}">DEALER</b> <br> 
-                Phase: {{phase}} <b>{{#if down}}DOWN{{/if}}</b>
+                Phase: {{#if down}}<b>DOWN</b>{{else}}{{phase}}{{/if}}
             </div>
         </div>
     </script>

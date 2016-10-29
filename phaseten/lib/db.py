@@ -50,6 +50,16 @@ def round_over_check(session, game_id):
 
     return False
 
+def set_hand_order(session, game_id):
+    game = get_game(session, game_id)
+    hand = get_cards(session, game_id, game.player_turn)
+    for i in range(len(hand)):
+        hand[i].pos = i
+
+    game.ac+=1
+    session.flush()
+
+
 def inc_turn(session, game_id):
     game = get_game(session, game_id)
     players = get_players(session, game_id)
@@ -121,6 +131,7 @@ def hit(session, game_id, card_id, pile_id, side):
             pile[i].location = pile_id
             pile[i].pos = i
         session.flush()
+        set_hand_order(session, game_id)
         
         if round_over_check(session, game_id):
             end_round(session, game_id)
@@ -177,6 +188,8 @@ def lay_down(session, game_id, cardset):
             game.piles_color+=1
         
         game.ac+=1
+        session.flush()
+        set_hand_order(session, game_id)
         session.commit()
         return "Good"
     else:
@@ -307,25 +320,25 @@ def skip(session, game_id, player_id):
 def discard(session, game_id, card_id):
     game = get_game(session, game_id)
     card = get_card(session, game_id, card_id)
-    hand = get_cards(session, game_id, game.player_turn)
     
     players = get_players(session, game_id)
     
     discard_pile = get_cards(session, game_id, -2)
     card.location = -2
     card.pos = len(discard_pile)
+    session.flush
+    set_hand_order(session, game_id)
     
     inc_turn(session, game_id)
     return "GOOD"
 
+
+
 def hand(session, game_id, player_id):
     cards = get_cards(session, game_id, player_id)
     rv = {'return': []}
-    i = 0
     for card in cards:
         tmp = card.dictify()
-        tmp['pos'] = i
-        i+=50
         rv['return'].append(tmp)
 
     return rv
