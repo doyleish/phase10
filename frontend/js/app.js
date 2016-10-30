@@ -1,6 +1,9 @@
 $(document).ready(function(){
     window.ac = -1;
-})
+    $("#handblock").sortable({
+        update: update_hand_arrangement
+    });
+});
 
 function syncJSON(i_url, callback) {
   $.ajax({
@@ -37,7 +40,7 @@ function join_game(game_id){
     })
     window.drawn = false;
     window.dealt = false;
-    setInterval(listener_loop, 500);
+    setInterval(listener_loop, 2000);
 }
 
 function listener_loop() {
@@ -118,14 +121,19 @@ function update_hand(){
         console.log("hand update");
         $("#handblock").html("");
         $("#handblock").text("");
-        var prefix = "hand_"
+        var prefix = "hand_";
+        var id_arr = [];
         if([1,2,3,7,9,10].indexOf(window.phase) > -1){
             prefix = "alt_";
         }
         for(var card in data["return"]){
             window.dealt = true;
             var ct = Handlebars.compile($("#"+prefix+"card_template").html());
-            $("#handblock").html($("#handblock").html()+ct($.extend({},data["return"][card],{'offset':data["return"][card]['pos']*50})));
+            $("#handblock").html($("#handblock").html()+ct(data["return"][card]));
+            id_arr.push(data["return"][card].card_id);
+        }
+        for(var card in $("#handblock").children()){
+            $("#handblock").children()[card].card_id = id_arr[card];
         }
         if(window.dealt){
             $("#dealbutton").css("display","none");
@@ -134,6 +142,21 @@ function update_hand(){
         }
 
     });
+}
+
+function update_hand_arrangement(){
+    console.log("rearrange hand silently. listen for successfull callback otherwise, update_hand. no ac increment.")
+    var order = []
+    var cards = $("input[id^=handcard]");
+    for(var card=0;card<cards.length;card++){
+        order.push(cards[card].id.replace("handcard",""));
+    }
+    $.getJSON("/p10/api/rearrange/"+window.game_id+"/"+window.player_id+"/"+order.join('-'), function(data){
+        if(data["return"]!="GOOD"){
+            update_hand()
+        }
+    });
+
 }
 
 function update_buttons(){
@@ -165,7 +188,7 @@ function update_decks(){
             cd = bct({});
         }
 
-        $("#mainblock").html(cd + ct({"offset":"150","value":"?","color":"grey","card_id":"main"}))
+        $("#mainblock").html(cd + ct({"offset":"20","value":"?","color":"grey","card_id":"main"}))
     });
 }
 

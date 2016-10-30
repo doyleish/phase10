@@ -87,6 +87,10 @@ def game_info(game_id):
 def hand(game_id, player_id):
     return jsonify(db.hand(s(), game_id, player_id))
 
+@app.route('/p10/api/rearrange/<game_id>/<player_id>/<cardset>')
+def rearrange(game_id, player_id, cardset):
+    return jsonify(db.rearrange_hand(s(), game_id, player_id, cardset))
+
 @app.route('/p10/api/players/<game_id>')
 def players(game_id):
     return jsonify(db.get_dict_players(s(), game_id))

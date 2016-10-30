@@ -366,10 +366,13 @@ def deal_round(session, game_id):
 
     return "GOOD"
 
-def rearrange_hand(session, game_id, player_id, indices):
+def rearrange_hand(session, game_id, player_id, cardset):
     hand = get_cards(session, game_id, player_id)
-    for index in range(indices):
-        hand[indices[index]].pos = index
+    cards = []
+    for cid in cardset.split('-'):
+        cards.append(get_card(session, game_id, cid))
+    for card in range(len(cards)):
+        cards[card].pos = card
     
     session.commit()
     return "GOOD"

@@ -2,28 +2,28 @@
   <head>
     <!-- templates -->
     <script id="deck_card_template" type="text/x-handlebars-template">
-        <div class="card" style="margin-left: {{offset}}px;">
+        <li class="card" style="margin-left: {{offset}}px;">
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
             <input style="zoom: 1.8;" type="checkbox" id="deckcard{{card_id}}"><br>
-        </div>
+        </li>
+    </script>
+    <script id="blank_card_template" type="text/x-handlebars-template">
+        <li class="card blankcard">
+            <b>Empty Pile</b>
+        </li>
     </script>
     <script id="hand_card_template" type="text/x-handlebars-template">
-        <div class="card" style="margin-left: {{offset}}px;">
+        <li class="card" style="margin-left: -50px;">
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
             <input style="zoom: 1.8;" type="checkbox" id="handcard{{card_id}}"><br>
-        </div>
+        </li>
     </script>
     <script id="alt_card_template" type="text/x-handlebars-template">
-        <div class="card" style="margin-left: {{offset}}px;">
+        <li class="card" style="margin-left: -50px;">
             <b><font style="font-size: 25pt; background-color: {{color}}; color: white;">&nbsp{{value}}&nbsp</font></b><br>
             <input style="zoom: 1.8;" type="checkbox" id="handcard{{card_id}}"><br>
             <input style="zoom: 1.8;" type="checkbox" id="altcard{{card_id}}"><br>
-        </div>
-    </script>
-    <script id="blank_card_template" type="text/x-handlebars-template">
-        <div class="card blankcard">
-            <b>Empty Pile</b>
-        </div>
+        </li>
     </script>
     <script id="player_template" type="text/x-handlebars-template">
         <div class="playeritem">
@@ -52,8 +52,9 @@
     <link rel="stylesheet" type="text/css" href="style/app.css">
 
     <!-- js -->
-    <script src="js/handlebars.js"></script>
-    <script src="js/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="js/app.js"></script>
   </head>
   <div id="landing">
@@ -77,18 +78,16 @@
         <span id="messagearea" style="float:right;"></span>
     </div>
     <div class="vertical playersbar" id="playerbar">
-      hi
     </div>
-    <div class="vertical mainblock" id="mainblock">
-        <div id="">
-            hi
-        </div>
+    <div class="vertical mainblock">
+        <ul id="mainblock">
+        </ul>
     </div>
     <div class="vertical phaseblock" id="phaseblock">
-        hi
     </div>
-    <div class="horizontal handblock" id="handblock">
-        hi
+    <div class="horizontal handblock">
+        <ul id="handblock">
+        </ul>
     </div>
   </div>
 </html>
