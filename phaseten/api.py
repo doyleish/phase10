@@ -11,7 +11,7 @@ from lib.game import Game
 import json
 
 app = Flask(__name__)
-engine = create_engine('sqlite:///:memory:', echo=True)
+engine = create_engine('sqlite:////tmp/p10.db')
 Card.metadata.create_all(engine)
 Player.metadata.create_all(engine)
 Game.metadata.create_all(engine)

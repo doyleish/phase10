@@ -188,6 +188,12 @@ def lay_down(session, game_id, cardset):
             game.piles_color+=1
         
         game.ac+=1
+        
+        # Possible to end round on lay-down.
+        if round_over_check(session, game_id):
+            end_round(session, game_id)
+            return
+        
         session.flush()
         set_hand_order(session, game_id)
         session.commit()
@@ -326,13 +332,11 @@ def discard(session, game_id, card_id):
     discard_pile = get_cards(session, game_id, -2)
     card.location = -2
     card.pos = len(discard_pile)
-    session.flush
+    session.flush()
     set_hand_order(session, game_id)
     
     inc_turn(session, game_id)
     return "GOOD"
-
-
 
 def hand(session, game_id, player_id):
     cards = get_cards(session, game_id, player_id)
@@ -345,11 +349,12 @@ def hand(session, game_id, player_id):
 
 
 def deal_round(session, game_id):
-    # set up deck
+    # gather all cards & set up deck
     cards = get_all_cards(session, game_id)
     for card in cards:
         card.location = -1
     shuffle(cards)
+    session.flush()
 
     # deal out cards
     game = get_game(session, game_id)
@@ -358,6 +363,10 @@ def deal_round(session, game_id):
     for player in range(dealer+1, (len(players)*10)+dealer+1):
         turn = player%len(players)
         draw_main(session, game_id, player_id=turn)
+
+    # flip over top-card into discard pile
+    cards = get_cards(session, game_id, -2)
+    cards[-1].location = -2
     
     # update game obj to reflect next round
     game.game_round += 1

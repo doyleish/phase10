@@ -18,7 +18,7 @@ def _run(num, cards):
 
     return True
 
-def _colors(num, cards):
+def _color(num, cards):
     if len(cards) != num:
         return False
     

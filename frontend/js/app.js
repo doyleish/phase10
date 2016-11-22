@@ -40,7 +40,7 @@ function join_game(game_id){
     })
     window.drawn = false;
     window.dealt = false;
-    setInterval(listener_loop, 2000);
+    setInterval(listener_loop, 1000);
 }
 
 function listener_loop() {
@@ -126,6 +126,13 @@ function update_hand(){
         if([1,2,3,7,9,10].indexOf(window.phase) > -1){
             prefix = "alt_";
         }
+        
+        if(data["return"].length == 0){
+            // This solves the bug of the previous round not ending with a discard
+            // This control flow is taken at the start of a round before being dealt
+            window.drawn = false;
+        }
+        
         for(var card in data["return"]){
             window.dealt = true;
             var ct = Handlebars.compile($("#"+prefix+"card_template").html());
@@ -301,6 +308,11 @@ function skip(){
     var checked_card = $("input[id^=handcard]:checked");
     if(checked_player.length!=1 || checked_card.length!=1){
         message("Bad card selection");
+        return;
+    }
+    if(!window.drawn){
+        // Don't want people discarding skip before drawn
+        message("Haven't drawn a card yet");
         return;
     }
     var pid = checked_player[0].id.replace('player','');
