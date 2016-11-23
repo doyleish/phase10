@@ -365,7 +365,7 @@ def deal_round(session, game_id):
         draw_main(session, game_id, player_id=turn)
 
     # flip over top-card into discard pile
-    cards = get_cards(session, game_id, -2)
+    cards = get_cards(session, game_id, -1)
     cards[-1].location = -2
     
     # update game obj to reflect next round
