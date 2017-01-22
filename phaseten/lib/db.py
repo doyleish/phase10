@@ -238,18 +238,18 @@ def _card_bootstrap(session, game_id):
         # mfw SQLite doesn't support autoinc on composite primary keys :(
         count = 0
         
-        for x in range(4):
-            session.add(Card(game_id=game_id, skip=True, pos=count, card_id=count))
-            count += 1
+        for number in (1,2,3,4,5,6,7,8,9,10,11,12):
+            for color in (1,1,2,2,3,3,4,4):
+                session.add(Card(game_id=game_id, number=number, color=color, pos=count, card_id=count))
+                count += 1
         
         for x in range(8):
             session.add(Card(game_id=game_id, wild=True, pos=count, card_id=count))
             count += 1
         
-        for color in (1,1,2,2,3,3,4,4):
-            for number in (1,2,3,4,5,6,7,8,9,10,11,12):
-                session.add(Card(game_id=game_id, number=number, color=color, pos=count, card_id=count))
-                count += 1
+        for x in range(4):
+            session.add(Card(game_id=game_id, skip=True, pos=count, card_id=count))
+            count += 1
 
 def create_game(session):
     game = Game()

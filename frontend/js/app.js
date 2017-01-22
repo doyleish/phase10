@@ -24,6 +24,20 @@ function new_game(){
     });
 }
 
+function rejoin_game(){
+    window.player_id = $("#player_id").val();
+    window.game_id = $("#game_id").val();
+    $("#landing").css("display", "none");
+    $("#game").css("display", "block");
+    $.getJSON("/p10/api/game_info/"+game_id, function(data){
+        $('#game_title').text(data['title']);
+        $('#ac').val(0);
+    })
+    window.drawn = false;
+    window.dealt = false;
+    setInterval(listener_loop, 1000);
+}
+
 function join_game(game_id){
     $("#landing").css("display", "none");
     $("#game").css("display", "block");
@@ -153,7 +167,7 @@ function update_hand(){
 
 function update_hand_arrangement(){
     console.log("rearrange hand silently. listen for successfull callback otherwise, update_hand. no ac increment.")
-    var order = []
+    var order = [];
     var cards = $("input[id^=handcard]");
     for(var card=0;card<cards.length;card++){
         order.push(cards[card].id.replace("handcard",""));
@@ -164,6 +178,20 @@ function update_hand_arrangement(){
         }
     });
 
+}
+
+function sort_hand(){
+    console.log("rearrange hand silently. listen for successfull callback otherwise, update_hand. no ac increment.")
+    var order = [];
+    var cards = $("input[id^=handcard]");
+    for(var card=0;card<cards.length;card++){
+        order.push(parseInt(cards[card].id.replace("handcard","")));
+    }
+    order.sort(function(a,b){return a>b});
+    
+    $.getJSON("/p10/api/rearrange/"+window.game_id+"/"+window.player_id+"/"+order.join('-'), function(data){
+        update_hand()
+    });
 }
 
 function update_buttons(){
