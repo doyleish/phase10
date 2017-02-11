@@ -18,7 +18,7 @@ function syncJSON(i_url, callback) {
 }
 
 function new_game(){
-    $.getJSON("/p10/api/new_game", function(data){
+    $.getJSON("api/new_game", function(data){
         window.game_id = data["return"];
         join_game(data["return"]);
     });
@@ -29,7 +29,7 @@ function rejoin_game(){
     window.game_id = $("#game_id").val();
     $("#landing").css("display", "none");
     $("#game").css("display", "block");
-    $.getJSON("/p10/api/game_info/"+game_id, function(data){
+    $.getJSON("api/game_info/"+game_id, function(data){
         $('#game_title').text(data['title']);
         $('#ac').val(0);
     })
@@ -45,10 +45,10 @@ function join_game(game_id){
         window.game_id = $("#game_id").val();
         game_id = $("#game_id").val();
     }
-    $.getJSON("/p10/api/join/"+window.game_id, function(data){
+    $.getJSON("api/join/"+window.game_id, function(data){
         window.player_id = data["return"];
     });
-    $.getJSON("/p10/api/game_info/"+game_id, function(data){
+    $.getJSON("api/game_info/"+game_id, function(data){
         $('#game_title').text(data['title']);
         $('#ac').val(0);
     })
@@ -58,7 +58,7 @@ function join_game(game_id){
 }
 
 function listener_loop() {
-    $.getJSON("/p10/api/ac/"+window.game_id, function(data){
+    $.getJSON("api/ac/"+window.game_id, function(data){
         if(data["return"] > window.ac){
             window.ac = data["return"];
             full_update();
@@ -79,13 +79,13 @@ function full_update(){
 
 function update_game_info(){
     console.log("game info update");
-    syncJSON("/p10/api/game_info/" + window.game_id, function(data){
+    syncJSON("api/game_info/" + window.game_id, function(data){
         window.turn = data['turn'];
         window.round = data['round'];
         window.dealer = data['dealer'];
         window.title = data['title'];
     });
-    syncJSON("/p10/api/players/" + window.game_id, function(data){
+    syncJSON("api/players/" + window.game_id, function(data){
         window.phase = data["return"][window.player_id]["phase"];
         window.down = data["return"][window.player_id]["down"];
     });
@@ -93,7 +93,7 @@ function update_game_info(){
 
 
 function update_players(){
-    $.getJSON("/p10/api/players/" + window.game_id, function(data){
+    $.getJSON("api/players/" + window.game_id, function(data){
         console.log("player update");
         $("#playerbar").html("");
         $("#playerbar").text("");
@@ -114,7 +114,7 @@ function update_players(){
 function update_phases(){
     $("#phaseblock").html("");
     $("#phaseblock").text("");
-    $.getJSON("/p10/api/phases/" + window.game_id, function(data){
+    $.getJSON("api/phases/" + window.game_id, function(data){
         console.log("phase update");
         var cw = Handlebars.compile($("#pilecontainer_template").html());
         var cc = Handlebars.compile($("#pilecard_template").html());
@@ -131,7 +131,7 @@ function update_phases(){
 
 function update_hand(){
     window.dealt = false;
-    $.getJSON("/p10/api/hand/" + window.game_id + "/" + window.player_id, function(data){
+    $.getJSON("api/hand/" + window.game_id + "/" + window.player_id, function(data){
         console.log("hand update");
         $("#handblock").html("");
         $("#handblock").text("");
@@ -172,7 +172,7 @@ function update_hand_arrangement(){
     for(var card=0;card<cards.length;card++){
         order.push(cards[card].id.replace("handcard",""));
     }
-    $.getJSON("/p10/api/rearrange/"+window.game_id+"/"+window.player_id+"/"+order.join('-'), function(data){
+    $.getJSON("api/rearrange/"+window.game_id+"/"+window.player_id+"/"+order.join('-'), function(data){
         if(data["return"]!="GOOD"){
             update_hand()
         }
@@ -189,7 +189,7 @@ function sort_hand(){
     }
     order.sort(function(a,b){return a>b});
     
-    $.getJSON("/p10/api/rearrange/"+window.game_id+"/"+window.player_id+"/"+order.join('-'), function(data){
+    $.getJSON("api/rearrange/"+window.game_id+"/"+window.player_id+"/"+order.join('-'), function(data){
         update_hand()
     });
 }
@@ -205,7 +205,7 @@ function update_buttons(){
 }
 
 function update_decks(){
-    $.getJSON("/p10/api/top_discard/"+window.game_id, function(data){
+    $.getJSON("api/top_discard/"+window.game_id, function(data){
         console.log("deck update");
         $("#mainblock").html("");
         $("#mainblock").text("");
@@ -230,7 +230,7 @@ function update_decks(){
 function deal_round(){
     if(checklock()){return;}
     if(window.dealer == window.player_id){
-        $.getJSON("/p10/api/deal/" + window.game_id, function(data){
+        $.getJSON("api/deal/" + window.game_id, function(data){
             console.log("deal");
         });
     }
@@ -259,9 +259,9 @@ function draw(){
         return;
     }
     if(card=="main"){
-        $.getJSON("/p10/api/draw_main/"+window.game_id);
+        $.getJSON("api/draw_main/"+window.game_id);
     }else if(card=="disc"){
-        $.getJSON("/p10/api/draw_discard/"+window.game_id);
+        $.getJSON("api/draw_discard/"+window.game_id);
     }else{
         message("Bad card selection");
         return;
@@ -283,7 +283,7 @@ function discard(){
         return;
     }
     var card = checked[0].id.replace('handcard','');
-    $.getJSON("/p10/api/discard/"+window.game_id+"/"+card);
+    $.getJSON("api/discard/"+window.game_id+"/"+card);
     window.drawn = false;
     setlock();
 }
@@ -307,7 +307,7 @@ function hit(){
     var side = pile_str[1]
     var card_id = card[0].id.replace('handcard','')
 
-    $.getJSON("/p10/api/hit/"+window.game_id+"/"+card_id+"/"+pile_id+"/"+side)
+    $.getJSON("api/hit/"+window.game_id+"/"+card_id+"/"+pile_id+"/"+side)
     
     setlock();
 }
@@ -325,7 +325,7 @@ function lay_down(){
     for(var x=0; x<q2.length;x++){
         card_set_2 += q2[x].id.replace('altcard','') + '-';
     }
-    $.getJSON("/p10/api/down/"+window.game_id+"/"+card_set_1+"_"+card_set_2);
+    $.getJSON("api/down/"+window.game_id+"/"+card_set_1+"_"+card_set_2);
     setlock();
 }
 
@@ -345,7 +345,7 @@ function skip(){
     }
     var pid = checked_player[0].id.replace('player','');
     var cid = checked_card[0].id.replace('handcard','');
-    $.getJSON("/p10/api/skip/"+window.game_id+"/"+pid, function(data){
+    $.getJSON("api/skip/"+window.game_id+"/"+pid, function(data){
         console.log(data)
         discard();
     });
